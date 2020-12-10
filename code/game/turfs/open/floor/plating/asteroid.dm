@@ -37,10 +37,13 @@
 	dug = TRUE
 
 /turf/open/floor/plating/asteroid/proc/can_dig(mob/user)
-	if(!dug)
-		return TRUE
-	if(user)
-		to_chat(user, "<span class='notice'>Looks like someone has dug here already.</span>")
+	if(!istype(loc, /turf/open/floor/plating/asteroid/basalt/vein/))
+		if(!dug)
+			return TRUE
+		if(user)
+			to_chat(user, "<span class='notice'>Looks like someone has dug here already.</span>")
+	else
+		to_chat(user, "<span class='notice'>You cannot dig here.</span>")
 
 /turf/open/floor/plating/asteroid/try_replace_tile(obj/item/stack/tile/T, mob/user, params)
 	return
@@ -86,7 +89,46 @@
 	icon_plating = "basalt"
 	environment_type = "basalt"
 	floor_variance = 15
-	digResult = /obj/item/stack/ore/glass/basalt
+
+//ORE VEINS/////////////////////////////////////////////////////////////////////////////////
+
+/turf/open/floor/plating/asteroid/basalt/vein
+	name = "mineral vein"
+	desc = "Looks like there's a rich deposit of oopsie woopsie. Tell coders about this."
+	baseturfs = /turf/open/floor/plating/asteroid/basalt
+	icon = 'icons/turf/floors.dmi'
+	icon_state = "vein_common"
+	environment_type = "basalt"
+	floor_variance = 0
+
+/turf/open/floor/plating/asteroid/basalt/vein/common
+	name = "common minerals vein"
+	desc = "Looks like there's a rich deposit of common minerals here."
+	icon_state = "vein_common"
+	//set_light(2, 0.6, LIGHT_COLOR_LAVA)
+
+/turf/open/floor/plating/asteroid/basalt/vein/volatile
+	name = "volatile minerals vein"
+	desc = "Looks like there's a rich deposit of volatile minerals here."
+	baseturfs = /turf/open/floor/plating/asteroid/basalt
+	icon_state = "vein_volatile"
+	//set_light(2, 0.6, LIGHT_COLOR_LAVA)
+
+/turf/open/floor/plating/asteroid/basalt/vein/noble
+	name = "noble minerals vein"
+	desc = "Looks like there's a rich deposit of noble minerals here."
+	baseturfs = /turf/open/floor/plating/asteroid/basalt
+	icon_state = "vein_noble"
+	//set_light(2, 0.6, LIGHT_COLOR_LAVA)
+
+/turf/open/floor/plating/asteroid/basalt/vein/rare
+	name = "rare-earth minerals vein"
+	desc = "Looks like there's a rich deposit of rare-earth minerals here."
+	baseturfs = /turf/open/floor/plating/asteroid/basalt
+	icon_state = "vein_rare"
+	//set_light(1.4, 0.6, LIGHT_COLOR_LAVA)
+
+///////////////////////////////////////////////////////////////////////////////////////////
 
 /turf/open/floor/plating/asteroid/basalt/lava //lava underneath
 	baseturfs = /turf/open/lava/smooth

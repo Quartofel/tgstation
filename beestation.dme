@@ -2119,6 +2119,7 @@
 #include "code\modules\mining\abandoned_crates.dm"
 #include "code\modules\mining\aux_base.dm"
 #include "code\modules\mining\aux_base_camera.dm"
+#include "code\modules\mining\deep_drill.dm"
 #include "code\modules\mining\fulton.dm"
 #include "code\modules\mining\machine_bluespaceminer.dm"
 #include "code\modules\mining\machine_processing.dm"
