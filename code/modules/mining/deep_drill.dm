@@ -105,7 +105,17 @@
 	circuit = /obj/item/circuitboard/machine/deep_drill
 	layer = BELOW_OBJ_LAYER
 	var/bluespace_upgrade = FALSE
-	var/list/ore_rates = list(/datum/material/iron = 0.6, /datum/material/glass = 0.6, /datum/material/copper = 0.4, /datum/material/plasma = 0.2,  /datum/material/silver = 0.2, /datum/material/gold = 0.1, /datum/material/titanium = 0.1, /datum/material/uranium = 0.1, /datum/material/diamond = 0.1)
+
+	var/list/ore_rates = list(/datum/material/iron = 0.6,
+	/datum/material/glass = 0.6,
+	/datum/material/copper = 0.4,
+	/datum/material/plasma = 0.2,
+	/datum/material/silver = 0.2,
+	/datum/material/gold = 0.1,
+	/datum/material/titanium = 0.1,
+	/datum/material/uranium = 0.1,
+	/datum/material/diamond = 0.1) //czy to jest potrzebne jeżeli mamy ore rates w turfach? ~Q
+
 	var/efficiency_coeff = 1
 	var/datum/component/remote_materials/materials
 
@@ -130,7 +140,7 @@
 	if(materials)
 		var/total_storage = 0
 		for(var/obj/item/stock_parts/matter_bin/M in component_parts)
-			total_storage += M.rating * 75000
+			total_storage += M.rating * 50000
 		materials.set_local_size(total_storage)
 	/*var/total_rating = 1.2
 	for(var/obj/item/stock_parts/manipulator/M in component_parts)
@@ -181,6 +191,7 @@
 	if(!mat_container || panel_open || !powered())
 		return
 
+	//here be runtime
 	var/turf/open/floor/plating/asteroid/basalt/vein/T = loc
 	var/datum/material/ore = pick(T.ore_rates)
 	mat_container.insert_amount_mat((ore_rates[ore] * 1000), ore)
