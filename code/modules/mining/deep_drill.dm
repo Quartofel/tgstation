@@ -105,17 +105,8 @@
 	circuit = /obj/item/circuitboard/machine/deep_drill
 	layer = BELOW_OBJ_LAYER
 	var/bluespace_upgrade = FALSE
-
-	var/list/ore_rates = list(/datum/material/iron = 0.6,
-	/datum/material/glass = 0.6,
-	/datum/material/copper = 0.4,
-	/datum/material/plasma = 0.2,
-	/datum/material/silver = 0.2,
-	/datum/material/gold = 0.1,
-	/datum/material/titanium = 0.1,
-	/datum/material/uranium = 0.1,
-	/datum/material/diamond = 0.1) //czy to jest potrzebne jeżeli mamy ore rates w turfach? ~Q
-
+	var/on = FALSE
+	var/energy_coeff = 1
 	var/efficiency_coeff = 1
 	var/datum/component/remote_materials/materials
 
@@ -127,6 +118,7 @@
 		new /obj/item/stock_parts/matter_bin,
 		new /obj/item/stock_parts/manipulator,
 		new /obj/item/stock_parts/manipulator,
+		new /obj/item/stock_parts/capacitor,
 		new /obj/item/pickaxe/drill)
 	RefreshParts()
 
@@ -136,19 +128,17 @@
 	return ..()
 
 /obj/machinery/mineral/deep_drill/RefreshParts()
-	efficiency_coeff = 1
+	efficiency_coeff = 0.8
+	energy_coeff = 1.1
 	if(materials)
 		var/total_storage = 0
 		for(var/obj/item/stock_parts/matter_bin/M in component_parts)
 			total_storage += M.rating * 50000
 		materials.set_local_size(total_storage)
-	/*var/total_rating = 1.2
 	for(var/obj/item/stock_parts/manipulator/M in component_parts)
-		total_rating = CLAMP(total_rating - (M.rating * 0.1), 0, 1)
-	if(total_rating == 0)
-		efficiency_coeff = INFINITY
-	else
-		efficiency_coeff = 1/total_rating*/
+		efficiency_coeff += M.rating * 0.1
+	for(var/obj/item/stock_parts/capacitor/C in component_parts)
+		energy_coeff -= C.rating * 0.1
 
 /obj/machinery/mineral/deep_drill/multitool_act(mob/living/user, obj/item/multitool/M)
 	if(bluespace_upgrade)
@@ -169,20 +159,26 @@
 			. += "<span class='notice'>It's connected to the ore silo.</span>"
 
 /obj/machinery/mineral/deep_drill/interact(mob/user)
-	if(!drill_eject_mats())
-		to_chat(user, "<span class='warning'>[src] can't eject materials from the silo!</span>")
+	if(on)
+		on = FALSE
+		to_chat(user, "<span class='notice'>You switch the [src] off.</span>")
+	else
+		on = TRUE
+		to_chat(user, "<span class='notice'>You switch the [src] on.</span>")
 
 /obj/machinery/mineral/deep_drill/proc/drill_eject_mats(mob/user)
 	if(materials?.silo)
+		to_chat(user, "<span class='warning'>[src] can't eject materials from the silo!</span>")
 		return FALSE
+	var/location = get_step(src,EAST)
 	var/datum/component/material_container/mat_container = materials.mat_container
-	mat_container.retrieve_all()
+	mat_container.retrieve_all(location)
+	to_chat(user, "<span class='notice'>You eject the materials from [src].</span>")
 	return TRUE
 
 /obj/machinery/mineral/deep_drill/AltClick(mob/user) //When alt-clicked the drill will drop stored mats.
 	if(user.canUseTopic(src, !issilicon(usr)))
 		drill_eject_mats()
-		to_chat(user, "<span class='notice'>You retrieve the materials from [src].</span>")
 
 /obj/machinery/mineral/deep_drill/process()
 	//if(!materials?.silo || materials?.on_hold())
@@ -192,9 +188,14 @@
 		return
 
 	//here be runtime
-	var/turf/open/floor/plating/asteroid/basalt/vein/T = loc
-	var/datum/material/ore = pick(T.ore_rates)
-	mat_container.insert_amount_mat((ore_rates[ore] * 1000), ore)
+	if(on)
+		if(istype(get_turf(src), /turf/open/floor/plating/asteroid/basalt/vein))
+			var/turf/open/floor/plating/asteroid/basalt/vein/T = loc
+			var/datum/material/ore = pick(T.ore_rates)
+			mat_container.insert_amount_mat((T.ore_rates[ore] * 1000*efficiency_coeff), ore)
+		else
+			playsound(src, 'sound/misc/compiler-failure.ogg')
+			sleep(120)
 	//var/datum/material/ore = pick(ore_rates)
 	//mat_container.insert_amount_mat((ore_rates[ore] * 1000), ore)
 
