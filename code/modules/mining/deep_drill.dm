@@ -60,7 +60,8 @@
 		efficiency_coeff += M.rating * 0.1
 	for(var/obj/item/stock_parts/capacitor/C in component_parts)
 		energy_coeff -= C.rating * 0.1
-	power_draw = efficiency_coeff * 100 * energy_coeff
+
+	power_draw = efficiency_coeff * 10 * energy_coeff //This defines how much power draw_power() should draw
 
 //INTERACTIONS//////////////////////
 
@@ -98,7 +99,7 @@
 		return
 	if(!cell)
 		return
-	if(panel_open)
+	if(panel_open && cell)
 		to_chat(user, "<span class='notice'>You remove the [cell] from the [src]</span>")
 		user.put_in_hands(cell)
 		cell.add_fingerprint(user)
@@ -129,7 +130,7 @@
 			I.add_fingerprint(usr)
 			user.visible_message("<span class='notice'>\The [user] inserts a power cell into \the [src].</span>", "<span class='notice'>You insert the power cell into \the [src].</span>")
 		else
-			to_chat(user, "<span class='warning'>The hatch must be open to insert a power cell!</span>")
+			to_chat(user, "<span class='warning'>The maintenance hatch must be open to install the [I]!</span>")
 			return
 
 	else if(istype(I, /obj/item/disk/cargo/silo_drill))
@@ -139,7 +140,7 @@
 				user.transferItemToLoc(I, src)
 				bluespace_upgrade = TRUE
 		else
-			to_chat(user, "<span class='warning'>You must open the maintenance hatch first!</span>")
+			to_chat(user, "<span class='warning'>The maintenance hatch must be open to install the [I]!</span>")
 			return
 
 	else if(I.tool_behaviour == TOOL_SCREWDRIVER)
@@ -186,7 +187,7 @@ obj/machinery/mineral/deep_drill/proc/draw_power() //This draws power from the c
 //MISC STUFF//////////////////////
 
 /obj/item/disk/cargo/silo_drill
-	name = "Ore Silo Link Upgrade"
+	name = "Bluespace Resource Transfer Upgrade"
 	desc = "Upgrade module for drill rigs allowing for remote transfer of the resources."
 	icon = 'icons/obj/module.dmi'
 	icon_state = "cargodisk"

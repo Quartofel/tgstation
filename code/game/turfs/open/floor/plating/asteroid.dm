@@ -113,19 +113,19 @@
 	name = "common minerals vein"
 	desc = "Looks like there's a rich deposit of common minerals here."
 	icon_state = "vein_common"
-	ore_rates = list(/datum/material/iron = 0.6, /datum/material/glass = 0.6, /datum/material/copper = 0.4)
+	ore_rates = list(/datum/material/iron = 1, /datum/material/glass = 1, /datum/material/copper = 0.5) //with T1 parts on drill rig 1 -> 200 sheets with high-capacity power cell
 
 /turf/open/floor/plating/asteroid/basalt/vein/volatile
 	name = "volatile minerals vein"
 	desc = "Looks like there's a rich deposit of volatile minerals here."
 	icon_state = "vein_volatile"
-	ore_rates = list(/datum/material/plasma = 0.2, /datum/material/uranium = 0.1)
+	ore_rates = list(/datum/material/plasma = 0.25, /datum/material/uranium = 0.15)
 
 /turf/open/floor/plating/asteroid/basalt/vein/noble
 	name = "noble minerals vein"
 	desc = "Looks like there's a rich deposit of noble minerals here."
 	icon_state = "vein_noble"
-	ore_rates = list(/datum/material/silver = 0.2, /datum/material/gold = 0.1, /datum/material/titanium = 0.1)
+	ore_rates = list(/datum/material/silver = 0.15, /datum/material/gold = 0.15, /datum/material/titanium = 0.2)
 
 /turf/open/floor/plating/asteroid/basalt/vein/rare
 	name = "rare-earth minerals vein"
