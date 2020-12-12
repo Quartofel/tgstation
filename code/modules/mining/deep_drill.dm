@@ -14,8 +14,16 @@
 	var/datum/component/remote_materials/materials
 	var/obj/item/stock_parts/cell/cell
 
+	var/hacked = FALSE
+	var/disabled = 0
+	var/shocked = FALSE
+	var/hack_wire
+	var/disable_wire
+	var/shock_wire
+
 /obj/machinery/mineral/deep_drill/Initialize(mapload)
 	. = ..()
+	wires = new /datum/wires/deep_drill(src)
 	materials = AddComponent(/datum/component/remote_materials, "bsm", mapload)
 	component_parts = list(new /obj/item/circuitboard/machine/deep_drill,
 		new /obj/item/stock_parts/matter_bin,
@@ -27,7 +35,7 @@
 		new /obj/item/pickaxe/drill)
 	RefreshParts()
 
-/obj/machinery/space_heater/on_construction()
+/obj/machinery/space_heater/on_construction() //sprawdź waflu czy to nie kasuje cella po zbudowaniu od zera
 	qdel(cell)
 	cell = null
 	panel_open = FALSE
@@ -82,6 +90,7 @@
 		. += "It appears to be unpowered."
 
 /obj/machinery/mineral/deep_drill/interact(mob/user)
+	zap_user(user)
 	if(on && !panel_open)
 		on = FALSE
 		to_chat(user, "<span class='notice'>You switch the [src] off.</span>")
@@ -90,6 +99,7 @@
 		to_chat(user, "<span class='notice'>You switch the [src] on.</span>")
 
 /obj/machinery/mineral/deep_drill/AltClick(mob/user) //When alt-clicked the drill will try to drop stored mats.
+	zap_user()
 	if(user.canUseTopic(src, !issilicon(usr)))
 		drill_eject_mats()
 
@@ -99,6 +109,7 @@
 		return
 	if(!cell)
 		return
+	zap_user(user)
 	if(panel_open && cell)
 		to_chat(user, "<span class='notice'>You remove the [cell] from the [src]</span>")
 		user.put_in_hands(cell)
@@ -116,6 +127,7 @@
 			return FALSE
 
 /obj/machinery/mineral/deep_drill/attackby(obj/item/I, mob/user, params) //Handles decon, power cell manipulations and upgrade module
+	zap_user(user)
 	if(user.a_intent == INTENT_HARM) //so we can hit the machine
 		return ..()
 	add_fingerprint(user)
@@ -183,6 +195,41 @@ obj/machinery/mineral/deep_drill/proc/draw_power() //This draws power from the c
 	if(on && cell && cell.charge > 0)
 		if(istype(get_turf(src), /turf/open/floor/plating/asteroid/basalt/vein))
 			drill_mats()
+
+/obj/machinery/deep_drill/proc/reset(wire)
+	switch(wire)
+		if(WIRE_HACK)
+			if(!wires.is_cut(wire))
+				adjust_hacked(FALSE)
+		if(WIRE_SHOCK)
+			if(!wires.is_cut(wire))
+				shocked = FALSE
+		if(WIRE_DISABLE)
+			if(!wires.is_cut(wire))
+				disabled = FALSE
+
+/obj/machinery/deep_drill/proc/zap_user(mob/user, prb)
+	if(!shocked && cell.charge < 100))		// unpowered, no shock
+		return FALSE
+	if(!prob(prb))
+		return FALSE
+	var/datum/effect_system/spark_spread/s = new /datum/effect_system/spark_spread
+	s.set_up(5, 1, src)
+	s.start()
+	if (electrocute_mob(user, get_area(src), src, 0.7, TRUE))
+		cell.use(100)
+		return TRUE
+	else
+		return FALSE
+
+/obj/machinery/deep_drill/proc/adjust_hacked(state)
+	hacked = state
+	if(hacked)
+		drill_eject_mats()
+
+/obj/machinery/deep_drill/hacked/Initialize()
+	. = ..()
+	adjust_hacked(TRUE)
 
 //MISC STUFF//////////////////////
 
