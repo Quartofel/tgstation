@@ -511,7 +511,9 @@
 	build_path = /obj/machinery/mineral/deep_drill
 	req_components = list(/obj/item/stock_parts/matter_bin = 2,
 	/obj/item/stock_parts/manipulator = 2,
-	/obj/item/pickaxe/drill)
+	/obj/item/stock_parts/capacitor = 1,
+	/obj/item/stock_parts/cell = 1,
+	/obj/item/pickaxe/drill = 1)
 
 /obj/item/circuitboard/machine/bluespace_miner
 	name = "Bluespace Miner (Machine Board)"
