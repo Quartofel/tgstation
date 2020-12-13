@@ -160,7 +160,7 @@
 			icon_state = icon_empty
 
 /obj/screen/inventory/proc/add_overlays()
-	var/mob/user = hud?.mymob
+	var/mob/user = hud.mymob
 
 	if(!user || !slot_id)
 		return
@@ -214,7 +214,7 @@
 /obj/screen/inventory/hand/Click(location, control, params)
 	// At this point in client Click() code we have passed the 1/10 sec check and little else
 	// We don't even know if it's a middle click
-	var/mob/user = hud?.mymob
+	var/mob/user = hud.mymob
 	if(usr != user)
 		return TRUE
 	if(world.time <= user.next_move)
@@ -414,7 +414,7 @@
 		L.lay_down()
 
 /obj/screen/rest/update_icon_state()
-	var/mob/living/user = hud?.mymob
+	var/mob/living/user = hud.mymob
 	if(!istype(user))
 		return
 

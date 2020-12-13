@@ -32,7 +32,7 @@ GLOBAL_LIST_EMPTY(turbolifts)
 		return
 
 	var/obj/docking_port/mobile/turbolift/M = SSshuttle.getShuttle(shuttle_id)
-	var/obj/machinery/computer/turbolift/T = M?.turbolift_computer?.resolve()
+	var/obj/machinery/computer/turbolift/T = M.turbolift_computer.resolve()
 	if(!M || !T)
 		say("An unexpected error has occured. Please contact a Nanotrasen Turbolift Repair Technician.")
 		return

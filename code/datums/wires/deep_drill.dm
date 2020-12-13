@@ -26,7 +26,7 @@
 	var/obj/machinery/mineral/deep_drill/A = holder
 	switch(wire)
 		if(WIRE_HACK)
-			A.adjust_hacked(!A.hacked)
+			A.pulse_eject(!A.hacked)
 			addtimer(CALLBACK(A, /obj/machinery/mineral/deep_drill.proc/reset, wire), 10)
 		if(WIRE_SHOCK)
 			A.shocked = !A.shocked
@@ -39,7 +39,7 @@
 	var/obj/machinery/mineral/deep_drill/A = holder
 	switch(wire)
 		if(WIRE_HACK)
-			A.adjust_hacked(!mend)
+			A.pulse_eject(!mend)
 		if(WIRE_HACK)
 			A.shocked = !mend
 		if(WIRE_DISABLE)

@@ -191,7 +191,7 @@ SUBSYSTEM_DEF(mapping)
 	for (var/file in files)
 		var/full_path = "_maps/[path]/[file]"
 		var/datum/parsed_map/pm = new(file(full_path))
-		var/bounds = pm?.bounds
+		var/bounds = pm.bounds
 		if (!bounds)
 			errorList |= full_path
 			continue

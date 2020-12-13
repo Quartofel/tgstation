@@ -660,7 +660,7 @@
 		var/mob/living/carbon/human/H = user
 
 		if(istype(H))
-			var/datum/species/ethereal/eth_species = H.dna?.species
+			var/datum/species/ethereal/eth_species = H.dna.species
 			if(istype(eth_species))
 				var/datum/species/ethereal/E = H.dna.species
 				if(E.drain_time > world.time)

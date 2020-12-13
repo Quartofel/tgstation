@@ -253,7 +253,7 @@
 		if(!do_after(user,5,0,user))
 			to_chat(user, "<span class='notice'>Our concentration has been broken!</span>")
 			break
-		var/mob/living/carbon/C = enemy.owner?.current
+		var/mob/living/carbon/C = enemy.owner.current
 		if(!C)
 			continue
 		var/mob/living/real_enemy = C.get_real_hivehost()
@@ -910,7 +910,7 @@
 	hive.active_one_mind = one_mind_team
 	one_mind_team.objectives += new_objective
 	for(var/datum/antagonist/hivevessel/vessel in GLOB.antagonists)
-		var/mob/living/carbon/C = vessel.owner?.current
+		var/mob/living/carbon/C = vessel.owner.current
 		if(C && hive.is_carbon_member(C))
 			vessel.one_mind = one_mind_team
 	for(var/datum/antagonist/hivemind/enemy in GLOB.antagonists)
