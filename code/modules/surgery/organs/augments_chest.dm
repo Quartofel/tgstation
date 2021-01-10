@@ -207,3 +207,19 @@
 
 	toggle(silent = TRUE)
 	return 0
+
+/obj/item/organ/cyberimp/chest/mechanodendrite
+	name = "mechanodendrite"
+	desc = "An implantable mechanical manipulator that can be controlled by the user by thought."
+	slot = ORGAN_SLOT_THRUSTERS
+	icon_state = "imp_jetpack"
+	w_class = WEIGHT_CLASS_NORMAL
+
+/obj/item/organ/cyberimp/chest/mechanodendrite/Insert(mob/living/carbon/M, special = 0)
+	M.change_number_of_hands(3)
+	..()
+
+/obj/item/organ/cyberimp/chest/mechanodendrite/Remove(mob/living/carbon/M, special = 0)
+	M.change_number_of_hands(2)
+	M.hud_used.build_hand_slots()
+	..()
